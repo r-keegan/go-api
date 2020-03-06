@@ -36,10 +36,10 @@ func ensureTableExists() {
 
 const tableCreationQuery = `CREATE TABLE IF NOT EXISTS products
 (
-	id SERIAL,
-	name TEXT NOT NULL,
-	price NUMERIC(10,2) NOT NULL DEFAULT 0.00,
-	CONSTRAINT products_pkey PRIMARY KEY (id)
+    id SERIAL,
+    name TEXT NOT NULL,
+    price NUMERIC(10,2) NOT NULL DEFAULT 0.00,
+    CONSTRAINT products_pkey PRIMARY KEY (id)
 )`
 
 func clearTable() {
@@ -102,13 +102,17 @@ func TestCreateProduct(t *testing.T) {
 	json.Unmarshal(response.Body.Bytes(), &m)
 
 	if m["name"] != "test product" {
-		t.Errorf(
-			"Expected product price to be '11.33'. Got '%v'",
+		t.Errorf("Expected product name to be 'test product'. Got '%v'",
+			m["name"])
+	}
+
+	if m["price"] != 11.33 {
+		t.Errorf("Expected product price to be '11.33'. Got '%v'",
 			m["price"])
 	}
 
 	if m["id"] != 1.0 {
-		t.Errorf("Exepected product ID to be '1'. Got '%v'",
+		t.Errorf("Expected product ID to be '1'. Got '%v'",
 			m["id"])
 	}
 }
@@ -137,6 +141,7 @@ func addProducts(count int) {
 
 func TestUpdateProduct(t *testing.T) {
 	clearTable()
+
 	addProducts(1)
 
 	req, _ := http.NewRequest("GET", "/product/1", nil)
